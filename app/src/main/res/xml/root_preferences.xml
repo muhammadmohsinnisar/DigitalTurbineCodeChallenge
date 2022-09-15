@@ -1,0 +1,28 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <PreferenceCategory android:title="@string/user_Login">
+
+    </PreferenceCategory>
+    <EditTextPreference
+        android:defaultValue="@string/application_Id"
+        android:key="edp_appId"
+        android:selectAllOnFocus="true"
+        android:singleLine="true"
+        android:title="Application ID" />
+    <EditTextPreference
+        android:defaultValue="@string/user_Id"
+        android:key="edp_userId"
+        android:selectAllOnFocus="true"
+        android:singleLine="true"
+        android:title="User ID" />
+    <EditTextPreference
+        android:defaultValue="@string/security_Token"
+        android:key="edp_token"
+        android:selectAllOnFocus="true"
+        android:singleLine="true"
+        android:title="Token" />
+    <SwitchPreference
+        android:defaultValue="false"
+        android:key="switch_dt"
+        android:title="Enable DT Wall" />
+</PreferenceScreen>
