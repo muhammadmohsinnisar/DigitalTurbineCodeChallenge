@@ -5,12 +5,8 @@ import android.os.Parcelable;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Thumbnail implements Parcelable
-{
+public class Thumbnail implements Parcelable {
 
-    private String lowres;
-    private String hires;
-    private Map<String, Object> additionalProperties = new HashMap<String, Object>();
     public final static Creator<Thumbnail> CREATOR = new Parcelable.Creator<Thumbnail>() {
 
 
@@ -25,13 +21,15 @@ public class Thumbnail implements Parcelable
             return (new Thumbnail[size]);
         }
 
-    }
-            ;
+    };
+    private String lowres;
+    private String hires;
+    private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
     protected Thumbnail(android.os.Parcel in) {
         this.lowres = ((String) in.readValue((String.class.getClassLoader())));
         this.hires = ((String) in.readValue((String.class.getClassLoader())));
-        this.additionalProperties = ((Map<String, Object> ) in.readValue((Map.class.getClassLoader())));
+        this.additionalProperties = ((Map<String, Object>) in.readValue((Map.class.getClassLoader())));
     }
 
     public Thumbnail() {

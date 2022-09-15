@@ -5,12 +5,8 @@ import android.os.Parcelable;
 import java.util.HashMap;
 import java.util.Map;
 
-public class TimeToPayout implements Parcelable
-{
+public class TimeToPayout implements Parcelable {
 
-    private Integer amount;
-    private String readable;
-    private Map<String, Object> additionalProperties = new HashMap<String, Object>();
     public final static Parcelable.Creator<TimeToPayout> CREATOR = new Creator<TimeToPayout>() {
 
 
@@ -25,13 +21,15 @@ public class TimeToPayout implements Parcelable
             return (new TimeToPayout[size]);
         }
 
-    }
-            ;
+    };
+    private Integer amount;
+    private String readable;
+    private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
     protected TimeToPayout(android.os.Parcel in) {
         this.amount = ((Integer) in.readValue((Integer.class.getClassLoader())));
         this.readable = ((String) in.readValue((String.class.getClassLoader())));
-        this.additionalProperties = ((Map<String, Object> ) in.readValue((Map.class.getClassLoader())));
+        this.additionalProperties = ((Map<String, Object>) in.readValue((Map.class.getClassLoader())));
     }
 
     public TimeToPayout() {

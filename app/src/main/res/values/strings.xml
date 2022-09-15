@@ -5,10 +5,7 @@
     <string name="first_fragment_label">First Fragment</string>
     <string name="second_fragment_label">Second Fragment</string>
     <string name="next">Next</string>
-    <string name="previous">Previous</string>
 
-    <string name="hello_first_fragment">Hello first fragment</string>
-    <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
     <!-- Preference Titles -->
     <string name="user_Login">User Login</string>
 
@@ -19,15 +16,9 @@
     <string name="ip_address">109.235.143.113</string>
     <string name="locale">DE</string>
     <string name="fomat">json</string>
-    <string name="offer_type">112</string>
     <string name="page">2</string>
     <string name="pub0">campaign2</string>
     <string name="generate_dtwall">Generate DTWall</string>
     <string name="build_a_wall">Build a Wall!!!</string>
-    <string name="lets_build_dt_walls">Lets build DT Walls</string>
-    <string name="digital_turbine_test_product">Digital Turbine Test Product</string>
-    <string name="splash_logo">splash logo</string>
-    <string name="lets_build_walls">Lets Build Walls</string>
-    <string name="image_received_from_json">Image Received from JSON</string>
 
 </resources>

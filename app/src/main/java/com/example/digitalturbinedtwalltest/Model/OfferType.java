@@ -5,12 +5,8 @@ import android.os.Parcelable;
 import java.util.HashMap;
 import java.util.Map;
 
-public class OfferType implements Parcelable
-{
+public class OfferType implements Parcelable {
 
-    private Integer offerTypeId;
-    private String readable;
-    private Map<String, Object> additionalProperties = new HashMap<String, Object>();
     public final static Parcelable.Creator<OfferType> CREATOR = new Creator<OfferType>() {
 
 
@@ -25,13 +21,15 @@ public class OfferType implements Parcelable
             return (new OfferType[size]);
         }
 
-    }
-            ;
+    };
+    private Integer offerTypeId;
+    private String readable;
+    private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
     protected OfferType(android.os.Parcel in) {
         this.offerTypeId = ((Integer) in.readValue((Integer.class.getClassLoader())));
         this.readable = ((String) in.readValue((String.class.getClassLoader())));
-        this.additionalProperties = ((Map<String, Object> ) in.readValue((Map.class.getClassLoader())));
+        this.additionalProperties = ((Map<String, Object>) in.readValue((Map.class.getClassLoader())));
     }
 
     public OfferType() {

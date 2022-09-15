@@ -17,16 +17,15 @@ import com.example.digitalturbinedtwalltest.R;
 import java.util.ArrayList;
 import java.util.List;
 
-public class WallAdapter extends RecyclerView.Adapter<WallAdapter.MyViewholder>{
+public class WallAdapter extends RecyclerView.Adapter<WallAdapter.MyViewholder> {
 
-    private Context context;
+    private final Context context;
     private List<Offer> Offers = new ArrayList<>();
 
-    public WallAdapter(Context context, List<Offer> Offers){
+    public WallAdapter(Context context, List<Offer> Offers) {
         this.context = context;
         this.Offers = Offers;
     }
-
 
 
     @NonNull
@@ -47,7 +46,7 @@ public class WallAdapter extends RecyclerView.Adapter<WallAdapter.MyViewholder>{
         String uri = offer.getThumbnail().getHires();
         //String uri = "https://source.unsplash.com/user/c_v_r/1900x800";
         holder.title.setText(title);
-        if (uri!=null){
+        if (uri != null) {
             Glide.with(context)
                     .load(uri)
                     .into(holder.imageView);
@@ -56,15 +55,15 @@ public class WallAdapter extends RecyclerView.Adapter<WallAdapter.MyViewholder>{
 
     @Override
     public int getItemCount() {
-        return Offers.size() -1;
+        return Offers.size() - 1;
     }
 
-    public static class MyViewholder extends RecyclerView.ViewHolder{
+    public static class MyViewholder extends RecyclerView.ViewHolder {
 
         TextView title;
         ImageView imageView;
 
-        public MyViewholder(@NonNull View itemView){
+        public MyViewholder(@NonNull View itemView) {
             super(itemView);
             title = itemView.getRootView().findViewById(R.id.title_object);
             imageView = itemView.getRootView().findViewById(R.id.image_object);

@@ -18,7 +18,7 @@ public class DTWall {
     @SerializedName("information")
     private Information information;
     @SerializedName("offers")
-    private List<Offer> offers = new ArrayList<>();
+    private final List<Offer> offers = new ArrayList<>();
 
     public String getCode() {
         return code;

@@ -6,19 +6,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class Offer implements Parcelable
-{
+public class Offer implements Parcelable {
 
-    private String title;
-    private Integer offerId;
-    private String teaser;
-    private String requiredActions;
-    private String link;
-    private List<OfferType> offerTypes = null;
-    private Thumbnail thumbnail;
-    private Integer payout;
-    private TimeToPayout timeToPayout;
-    private Map<String, Object> additionalProperties = new HashMap<String, Object>();
     public final static Creator<Offer> CREATOR = new Creator<Offer>() {
 
 
@@ -34,6 +23,16 @@ public class Offer implements Parcelable
         }
 
     };
+    private String title;
+    private Integer offerId;
+    private String teaser;
+    private String requiredActions;
+    private String link;
+    private List<OfferType> offerTypes = null;
+    private Thumbnail thumbnail;
+    private Integer payout;
+    private TimeToPayout timeToPayout;
+    private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
     protected Offer(android.os.Parcel in) {
         this.title = ((String) in.readValue((String.class.getClassLoader())));
@@ -45,7 +44,7 @@ public class Offer implements Parcelable
         this.thumbnail = ((Thumbnail) in.readValue((Thumbnail.class.getClassLoader())));
         this.payout = ((Integer) in.readValue((Integer.class.getClassLoader())));
         this.timeToPayout = ((TimeToPayout) in.readValue((TimeToPayout.class.getClassLoader())));
-        this.additionalProperties = ((Map<String, Object> ) in.readValue((Map.class.getClassLoader())));
+        this.additionalProperties = ((Map<String, Object>) in.readValue((Map.class.getClassLoader())));
     }
 
     public Offer() {

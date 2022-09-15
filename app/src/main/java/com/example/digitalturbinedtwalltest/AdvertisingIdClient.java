@@ -42,6 +42,115 @@ import java.util.concurrent.LinkedBlockingQueue;
 public class AdvertisingIdClient {
 
     private static final String TAG = AdvertisingIdClient.class.getSimpleName();
+    protected Listener mListener;
+    protected Handler mHandler;
+
+    /**
+     * Method to invoke the process of getting advertisingid, using UIThread
+     *
+     * @param context  a valid context
+     * @param listener valid Listener for callbacks
+     */
+    public static synchronized void getAdvertisingId(Context context, Listener listener) {
+
+        new AdvertisingIdClient().start(context, listener);
+    }
+    //==============================================================================================
+    // Public methods
+    //==============================================================================================
+
+    //==============================================================================================
+    // Inner methods
+    //==============================================================================================
+    protected void start(final Context context, final Listener listener) {
+
+        if (listener == null) {
+            Log.e(TAG, "getAdvertisingId - Error: null listener, dropping call");
+        } else {
+            mHandler = new Handler(Looper.getMainLooper());
+            mListener = listener;
+            if (context == null) {
+                invokeFail(new Exception(TAG + " - Error: context null"));
+            } else {
+                new Thread(new Runnable() {
+
+                    @Override
+                    public void run() {
+
+                        getAdvertisingIdInfo(context);
+                    }
+                }).start();
+            }
+        }
+    }
+
+    public void getAdvertisingIdInfo(Context context) {
+
+        Log.v(TAG, "getAdvertisingIdInfo");
+        try {
+            PackageManager pm = context.getPackageManager();
+            pm.getPackageInfo("com.android.vending", 0);
+            Intent intent = new Intent("com.google.android.gms.ads.identifier.service.START");
+            intent.setPackage("com.google.android.gms");
+            AdvertisingConnection connection = new AdvertisingConnection();
+            try {
+                if (context.bindService(intent, connection, Context.BIND_AUTO_CREATE)) {
+                    AdvertisingInterface adInterface = new AdvertisingInterface(connection.getBinder());
+                    String id = adInterface.getId();
+                    if (TextUtils.isEmpty(id)) {
+                        Log.w(TAG, "getAdvertisingIdInfo - Error: ID Not available");
+                        invokeFail(new Exception("Advertising ID extraction Error: ID Not available"));
+                    } else {
+                        invokeFinish(new AdInfo(id, adInterface.isLimitAdTrackingEnabled(true)));
+                    }
+                }
+            } catch (Exception exception) {
+                Log.w(TAG, "getAdvertisingIdInfo - Error: " + exception);
+                invokeFail(exception);
+            } finally {
+                context.unbindService(connection);
+            }
+        } catch (Exception exception) {
+            Log.w(TAG, "getAdvertisingIdInfo - Error: " + exception);
+            invokeFail(exception);
+        }
+    }
+    //==============================================================================================
+    // Inner classes
+    //==============================================================================================
+
+    //==============================================================================================
+    // Listener helpers
+    //==============================================================================================
+    protected void invokeFinish(final AdInfo adInfo) {
+
+        Log.v(TAG, "invokeFinish");
+        mHandler.post(new Runnable() {
+
+            @Override
+            public void run() {
+
+                if (mListener != null) {
+                    mListener.onAdvertisingIdClientFinish(adInfo);
+                }
+            }
+        });
+    }
+
+    protected void invokeFail(final Exception exception) {
+
+        Log.v(TAG, "invokeFail: " + exception);
+        mHandler.post(new Runnable() {
+
+            @Override
+            public void run() {
+
+                if (mListener != null) {
+                    mListener.onAdvertisingIdClientFail(exception);
+                }
+            }
+        });
+    }
 
     //==============================================================================================
     // LISTENER
@@ -63,29 +172,12 @@ public class AdvertisingIdClient {
         void onAdvertisingIdClientFail(Exception exception);
     }
 
-    protected Listener mListener;
-    protected Handler  mHandler;
-    //==============================================================================================
-    // Public methods
-    //==============================================================================================
-
-    /**
-     * Method to invoke the process of getting advertisingid, using UIThread
-     *
-     * @param context  a valid context
-     * @param listener valid Listener for callbacks
-     */
-    public static synchronized void getAdvertisingId(Context context, Listener listener) {
-
-        new AdvertisingIdClient().start(context, listener);
-    }
-
     /**
      * Ad Info data class with the results
      */
     public class AdInfo {
 
-        private final String  mAdvertisingId;
+        private final String mAdvertisingId;
         private final boolean mLimitAdTrackingEnabled;
 
         AdInfo(String advertisingId, boolean limitAdTrackingEnabled) {
@@ -104,32 +196,33 @@ public class AdvertisingIdClient {
             return mLimitAdTrackingEnabled;
         }
     }
-    //==============================================================================================
-    // Inner classes
-    //==============================================================================================
 
     /**
      * Advertising Service Connection
      */
     protected class AdvertisingConnection implements ServiceConnection {
 
-        boolean retrieved = false;
         private final LinkedBlockingQueue<IBinder> queue = new LinkedBlockingQueue<IBinder>(1);
+        boolean retrieved = false;
 
         public void onServiceConnected(ComponentName name, IBinder service) {
 
             try {
                 this.queue.put(service);
-            } catch (InterruptedException localInterruptedException) {}
+            } catch (InterruptedException localInterruptedException) {
+            }
         }
 
-        public void onServiceDisconnected(ComponentName name) {}
+        public void onServiceDisconnected(ComponentName name) {
+        }
 
         public IBinder getBinder() throws InterruptedException {
 
-            if (this.retrieved) { throw new IllegalStateException(); }
+            if (this.retrieved) {
+                throw new IllegalStateException();
+            }
             this.retrieved = true;
-            return (IBinder) this.queue.take();
+            return this.queue.take();
         }
     }
 
@@ -138,7 +231,7 @@ public class AdvertisingIdClient {
      */
     protected class AdvertisingInterface implements IInterface {
 
-        private IBinder binder;
+        private final IBinder binder;
 
         public AdvertisingInterface(IBinder pBinder) {
 
@@ -184,95 +277,5 @@ public class AdvertisingIdClient {
             }
             return limitAdTracking;
         }
-    }
-
-    //==============================================================================================
-    // Inner methods
-    //==============================================================================================
-    protected void start(final Context context, final Listener listener) {
-
-        if (listener == null) {
-            Log.e(TAG, "getAdvertisingId - Error: null listener, dropping call");
-        } else {
-            mHandler = new Handler(Looper.getMainLooper());
-            mListener = listener;
-            if (context == null) {
-                invokeFail(new Exception(TAG + " - Error: context null"));
-            } else {
-                new Thread(new Runnable() {
-
-                    @Override
-                    public void run() {
-
-                        getAdvertisingIdInfo(context);
-                    }
-                }).start();
-            }
-        }
-    }
-
-    public void getAdvertisingIdInfo(Context context) {
-
-        Log.v(TAG, "getAdvertisingIdInfo");
-        try {
-            PackageManager pm = context.getPackageManager();
-            pm.getPackageInfo("com.android.vending", 0);
-            Intent intent = new Intent("com.google.android.gms.ads.identifier.service.START");
-            intent.setPackage("com.google.android.gms");
-            AdvertisingConnection connection = new AdvertisingConnection();
-            try {
-                if (context.bindService(intent, connection, Context.BIND_AUTO_CREATE)) {
-                    AdvertisingInterface adInterface = new AdvertisingInterface(connection.getBinder());
-                    String id = adInterface.getId();
-                    if(TextUtils.isEmpty(id)) {
-                        Log.w(TAG, "getAdvertisingIdInfo - Error: ID Not available");
-                        invokeFail(new Exception("Advertising ID extraction Error: ID Not available"));
-                    } else {
-                        invokeFinish(new AdInfo(id, adInterface.isLimitAdTrackingEnabled(true)));
-                    }
-                }
-            } catch (Exception exception) {
-                Log.w(TAG, "getAdvertisingIdInfo - Error: " + exception);
-                invokeFail(exception);
-            } finally {
-                context.unbindService(connection);
-            }
-        } catch (Exception exception) {
-            Log.w(TAG, "getAdvertisingIdInfo - Error: " + exception);
-            invokeFail(exception);
-        }
-    }
-
-    //==============================================================================================
-    // Listener helpers
-    //==============================================================================================
-    protected void invokeFinish(final AdInfo adInfo) {
-
-        Log.v(TAG, "invokeFinish");
-        mHandler.post(new Runnable() {
-
-            @Override
-            public void run() {
-
-                if (mListener != null) {
-                    mListener.onAdvertisingIdClientFinish(adInfo);
-                }
-            }
-        });
-    }
-
-    protected void invokeFail(final Exception exception) {
-
-        Log.v(TAG, "invokeFail: " + exception);
-        mHandler.post(new Runnable() {
-
-            @Override
-            public void run() {
-
-                if (mListener != null) {
-                    mListener.onAdvertisingIdClientFail(exception);
-                }
-            }
-        });
     }
 }

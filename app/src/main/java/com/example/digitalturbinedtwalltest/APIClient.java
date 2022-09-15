@@ -24,12 +24,6 @@ public class APIClient {
                 .build();
 
 
-//        retrofit = new Retrofit.Builder()
-//                .baseUrl(DWWallApiService.BASE_URl)
-//                .addConverterFactory(GsonConverterFactory.create())
-//                .build();
-
-
         return retrofit;
     }
 }

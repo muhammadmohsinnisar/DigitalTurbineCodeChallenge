@@ -7,6 +7,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -14,30 +17,22 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.preference.PreferenceManager;
 
-import com.example.digitalturbinedtwalltest.Interface.DTWallApi;
-import com.example.digitalturbinedtwalltest.Model.DTWall;
-import com.example.digitalturbinedtwalltest.Model.Information;
-import com.example.digitalturbinedtwalltest.Model.Offer;
 import com.example.digitalturbinedtwalltest.databinding.FragmentFirstBinding;
 
-import java.util.List;
 import java.util.Objects;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class FirstFragment extends Fragment {
 
 
-    private String TAG = "FirstFragment";
     private static String app_id;
     private static String user_id;
     private static String security_token;
-
+    Animation shake;
+    Animation gone;
+    TextView textView;
     SharedPreferences sp;
     SharedPreferences.OnSharedPreferenceChangeListener listener;
-
+    private final String TAG = "FirstFragment";
     private FragmentFirstBinding binding;
 
     @Override
@@ -48,13 +43,14 @@ public class FirstFragment extends Fragment {
 
         Context context = getActivity().getApplicationContext();
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
-        app_id = sharedPreferences.getString("edp_appId", "");
-        user_id = sharedPreferences.getString("edp_userId", "");
-        security_token = sharedPreferences.getString("edp_token", "");
-
         sp = PreferenceManager.getDefaultSharedPreferences(getContext());
-
         binding = FragmentFirstBinding.inflate(inflater, container, false);
+
+        textView = binding.textviewFirst;
+        //Animations
+        shake = AnimationUtils.loadAnimation(getContext(), R.anim.shake_animatation);
+        gone = AnimationUtils.loadAnimation(getContext(), R.anim.bottom_animation);
+
         return binding.getRoot();
 
     }
@@ -68,23 +64,24 @@ public class FirstFragment extends Fragment {
         listener = new SharedPreferences.OnSharedPreferenceChangeListener() {
             @Override
             public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-                if(Objects.equals(key,"switch_dt")) {
-                    if(sharedPreferences.getBoolean(key,false)){
-                        Log.d(TAG,"Enabled DT Wall");
+                if (Objects.equals(key, "switch_dt")) {
+                    if (sharedPreferences.getBoolean(key, false)) {
+                        Log.d(TAG, "Enabled DT Wall");
                     } else {
-                        Log.d(TAG,"Disabled DT Wall");
+                        Log.d(TAG, "Disabled DT Wall");
                     }
                 }
             }
         };
 
 
-        if(sp.getBoolean("switch_dt", false)) {
+        if (sp.getBoolean("switch_dt", false)) {
             binding.buttonFirst.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                        NavHostFragment.findNavController(FirstFragment.this)
-                                .navigate(R.id.action_FirstFragment_to_SecondFragment);
+                    binding.buttonFirst.startAnimation(shake);
+                    NavHostFragment.findNavController(FirstFragment.this)
+                            .navigate(R.id.action_FirstFragment_to_SecondFragment);
                 }
             });
         } else {
@@ -92,6 +89,9 @@ public class FirstFragment extends Fragment {
             binding.buttonFirst.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    textView.setText("Enable DT Wall from Settings!");
+                    binding.buttonFirst.startAnimation(gone);
+                    binding.buttonFirst.setVisibility(View.INVISIBLE);
                     Toast.makeText(getContext(), "Wall is disabled! Enable DT Wall from Settings", Toast.LENGTH_SHORT).show();
                 }
             });

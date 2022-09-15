@@ -5,16 +5,8 @@ import android.os.Parcelable;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Information implements Parcelable
-{
+public class Information implements Parcelable {
 
-    private String appName;
-    private Integer appid;
-    private String virtualCurrency;
-    private String country;
-    private String language;
-    private String supportUrl;
-    private Map<String, Object> additionalProperties = new HashMap<String, Object>();
     public final static Creator<Information> CREATOR = new Parcelable.Creator<Information>() {
 
 
@@ -29,8 +21,14 @@ public class Information implements Parcelable
             return (new Information[size]);
         }
 
-    }
-            ;
+    };
+    private String appName;
+    private Integer appid;
+    private String virtualCurrency;
+    private String country;
+    private String language;
+    private String supportUrl;
+    private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
     protected Information(android.os.Parcel in) {
         this.appName = ((String) in.readValue((String.class.getClassLoader())));
@@ -39,7 +37,7 @@ public class Information implements Parcelable
         this.country = ((String) in.readValue((String.class.getClassLoader())));
         this.language = ((String) in.readValue((String.class.getClassLoader())));
         this.supportUrl = ((String) in.readValue((String.class.getClassLoader())));
-        this.additionalProperties = ((Map<String, Object> ) in.readValue((Map.class.getClassLoader())));
+        this.additionalProperties = ((Map<String, Object>) in.readValue((Map.class.getClassLoader())));
     }
 
     public Information() {
