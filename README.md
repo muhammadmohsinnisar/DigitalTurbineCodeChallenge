@@ -1,7 +1,5 @@
 # DigitalTurbineCodeChallenge
 
-# Digital Turbine Android Technical Test
-
 
 ## Screenshots
 
