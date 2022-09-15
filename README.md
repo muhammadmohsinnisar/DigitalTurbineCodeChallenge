@@ -4,18 +4,18 @@
 ## Screenshots
 
 ### Home
-![Home](Screenshots/home)
+![Home](Screenshots/home.jpeg)
 The first screen for the application. Press on the next button to go to the Wall, and settings can be accessed using the menu in toolbar.
 
 ### Settings
-![Settings](Screenshots/settings)
+![Settings](Screenshots/settings.jpeg)
 The appId, user Id and token can be adjusted here. Make sure to enable the Wall here.
 
 ### Wall
-![Wall1](Screenshots/wall1)
+![Wall1](Screenshots/wall1.jpeg)
 Here you have to press/click the on wall to get the wall. 
 
-![Wall2](Screenshots/wall2)
+![Wall2](Screenshots/wall2.jpeg)
 After pressing/clicking on the wall. The wall is generated viewing the title and the image from the API.
 
 ## APK file
