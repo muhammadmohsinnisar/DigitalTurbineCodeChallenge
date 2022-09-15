@@ -4,11 +4,14 @@
 ## Screenshots
 
 ### Home
-
+![Home]{Screenshots/home}
 
 ### Settings
+![Settings]{Screenshots/settings}
 
 ### Wall
+![Wall1]{Screenshots/wall1}
+![Wall2]{Screenshots/wall2}
 
 ## APK file
 
