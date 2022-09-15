@@ -2,6 +2,7 @@ package com.example.digitalturbinedtwalltest;
 
 import junit.framework.TestCase;
 
+import org.junit.Rule;
 import org.junit.Test;
 
 import java.nio.charset.StandardCharsets;
@@ -25,4 +26,5 @@ public class SecondFragmentTest extends TestCase {
 
        assertEquals(expected, output);
     }
+
 }
