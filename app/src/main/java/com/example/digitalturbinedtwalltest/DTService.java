@@ -15,10 +15,8 @@ import androidx.annotation.Nullable;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.preference.PreferenceManager;
 
-import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.Calendar;
 import java.util.Objects;
 import java.util.TimeZone;
@@ -69,30 +67,6 @@ public class DTService extends Service {
             ignored.printStackTrace();
             return null;
         }
-    }
-
-    public static final String getSHA1Key(String toHash) {
-        String hash = null;
-        try {
-            MessageDigest digest = MessageDigest.getInstance("SHA-1");
-            byte[] bytes = toHash.getBytes(StandardCharsets.UTF_8);
-            digest.update(bytes, 0, bytes.length);
-            bytes = digest.digest();
-
-            // This is ~55x faster than looping and String.formating()
-            hash = convertToHex(bytes);
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        }
-        return hash;
-    }
-
-    public static String convertToHex(byte[] raw) {
-        StringBuffer sb = new StringBuffer();
-        for (int i = 0; i < raw.length; i++) {
-            sb.append(Integer.toString((raw[i] & 0xff) + 0x100, 16).substring(1));
-        }
-        return sb.toString();
     }
 
     @Override

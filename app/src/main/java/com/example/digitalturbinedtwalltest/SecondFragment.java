@@ -26,8 +26,11 @@ import com.example.digitalturbinedtwalltest.Model.Information;
 import com.example.digitalturbinedtwalltest.Model.Offer;
 import com.example.digitalturbinedtwalltest.databinding.FragmentSecondBinding;
 
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
 import java.util.List;
 
+import okhttp3.Headers;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -106,6 +109,22 @@ public class SecondFragment extends Fragment {
                     Log.d(TAG, "onResponse: get code :" + response.body().getCode());
                     Log.d(TAG, "onResponse: message : " + response.body().getMessage());
 
+                    //Hash created usinng response.body + API KEY
+                    String sp_token = sharedPreferences.getString("edp_token", "123");
+                    String response_check = response.body().toString() + "&" +sp_token;
+                    String response_hash = getSha1Hex(response_check);
+                    Log.d(TAG,"response hash : " + response_hash);
+
+                    //Hash received with header
+                    Headers headers = response.headers();
+                    String response_signature = headers.get("X-Sponsorpay-Response-Signature");
+                    Log.d(TAG,"Signature hash : " + response_signature);
+
+                    //Since hash are not the same, the callback can be stopped using if condition here.
+                    //Not using if conidition due to not same hash recieved.
+
+                    //TODO Ask question about signed response in case of 2nd interview.
+
                     try {
                         DTWall dtWall = response.body();
                         List<Offer> offers = dtWall.getOffers();
@@ -149,6 +168,22 @@ public class SecondFragment extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(wallAdapter);
 
+    }
+
+    public static String getSha1Hex(String clearString) {
+        try {
+            MessageDigest messageDigest = MessageDigest.getInstance("SHA-1");
+            messageDigest.update(clearString.getBytes(StandardCharsets.UTF_8));
+            byte[] bytes = messageDigest.digest();
+            StringBuilder buffer = new StringBuilder();
+            for (byte b : bytes) {
+                buffer.append(Integer.toString((b & 0xff) + 0x100, 16).substring(1));
+            }
+            return buffer.toString();
+        } catch (Exception ignored) {
+            ignored.printStackTrace();
+            return null;
+        }
     }
 
     @Override
