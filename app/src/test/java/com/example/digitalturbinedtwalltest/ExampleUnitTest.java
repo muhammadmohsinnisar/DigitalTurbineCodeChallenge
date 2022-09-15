@@ -15,8 +15,7 @@ public class ExampleUnitTest {
     public static String TAG = "Test";
     @Test
     public void packageName() {
-        Ordering.Context context = InstrumentationRegistry.getInstrumentation().targetContext;
-        assertEquals("com.example.digitalturbinedtwalltest", context.getTarget());
+
     }
 
 
